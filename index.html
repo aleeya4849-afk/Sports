@@ -1,0 +1,1718 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GoalGuru — Turn Dreams into Motion</title>
+    <!-- GoalGuru — Animated Goal Tracking Experience | Built with HTML, CSS, JS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Caveat:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <style>
+        :root {
+            --primary: #2dd4bf;
+            --secondary: #a855f7;
+            --accent: #f59e0b;
+            --light: #f0fdfa;
+            --dark: #0f172a;
+            --glass: rgba(255, 255, 255, 0.1);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            --transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .dark-mode {
+            --light: #0f172a;
+            --dark: #f0fdfa;
+            --glass: rgba(15, 23, 42, 0.7);
+            --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #0ea5e9, #8b5cf6, #ec4899);
+            color: var(--dark);
+            min-height: 100vh;
+            transition: var(--transition);
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        body::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(255, 119, 198, 0.3) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 40%, rgba(120, 219, 255, 0.2) 0%, transparent 50%);
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Landing Page Styles */
+        .landing-page {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title-container {
+            margin-bottom: 2rem;
+        }
+
+        .main-title {
+            font-family: 'Caveat', cursive;
+            font-size: 4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            opacity: 0;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .get-started-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 15px 40px;
+            font-size: 1.2rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        .get-started-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+        }
+
+        .ripple {
+            position: absolute;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.6);
+            transform: scale(0);
+            animation: ripple-animation 0.6s linear;
+            pointer-events: none;
+        }
+
+        @keyframes ripple-animation {
+            to {
+                transform: scale(4);
+                opacity: 0;
+            }
+        }
+
+        /* Dashboard Styles */
+        .dashboard {
+            min-height: 100vh;
+            padding: 2rem 0;
+            display: none;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        .dashboard-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2.5rem;
+            font-weight: 700;
+        }
+
+        .theme-toggle {
+            background: var(--glass);
+            border: none;
+            width: 60px;
+            height: 30px;
+            border-radius: 50px;
+            position: relative;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 5px;
+            transition: var(--transition);
+        }
+
+        .toggle-circle {
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background: var(--accent);
+            position: absolute;
+            transition: var(--transition);
+            left: 5px;
+        }
+
+        .dark-mode .toggle-circle {
+            left: 33px;
+        }
+
+        .toggle-icon {
+            font-size: 14px;
+            transition: var(--transition);
+        }
+
+        .sun-icon {
+            margin-right: auto;
+        }
+
+        .moon-icon {
+            margin-left: auto;
+        }
+
+        .goals-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .goal-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 1.5rem;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            transform-style: preserve-3d;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .goal-card:hover {
+            transform: translateY(-10px) rotateX(5deg);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        .goal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+        }
+
+        .goal-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .goal-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: var(--transition);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .edit-btn:hover {
+            background: rgba(45, 212, 191, 0.2);
+            transform: scale(1.1);
+        }
+
+        .delete-btn:hover {
+            background: rgba(239, 68, 68, 0.2);
+            transform: scale(1.1);
+        }
+
+        .goal-description {
+            color: rgba(255, 255, 255, 0.7);
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+
+        .progress-container {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .progress-ring {
+            width: 60px;
+            height: 60px;
+        }
+
+        .progress-text {
+            font-weight: 600;
+            font-size: 1.2rem;
+        }
+
+        .streak-counter {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+        }
+
+        .fire-icon {
+            animation: glow 2s infinite alternate;
+        }
+
+        @keyframes glow {
+            from {
+                filter: drop-shadow(0 0 5px rgba(245, 158, 11, 0.7));
+            }
+            to {
+                filter: drop-shadow(0 0 15px rgba(245, 158, 11, 1));
+            }
+        }
+
+        .add-goal-btn {
+            background: var(--glass);
+            border: 2px dashed rgba(255, 255, 255, 0.3);
+            border-radius: 20px;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .add-goal-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .add-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--primary);
+        }
+
+        /* Modal Styles */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: var(--light);
+            color: var(--dark);
+            width: 90%;
+            max-width: 500px;
+            border-radius: 20px;
+            padding: 2rem;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            transform: scale(0.7);
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--dark);
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+
+        .form-input, .form-textarea {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            transition: var(--transition);
+        }
+
+        .form-input:focus, .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(45, 212, 191, 0.3);
+        }
+
+        .progress-line {
+            height: 4px;
+            background: #e5e7eb;
+            border-radius: 2px;
+            margin-bottom: 1.5rem;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: var(--primary);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+
+        .save-goal-btn {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            font-size: 1rem;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: var(--transition);
+            width: 100%;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+
+        .save-goal-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Progress Visualization */
+        .progress-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+        }
+
+        .section-title {
+            font-family: 'Caveat', cursive;
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+
+        .charts-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+
+        .chart-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .motivation-btn {
+            background: linear-gradient(135deg, var(--accent), #f97316);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 600;
+            margin-top: 1rem;
+            transition: var(--transition);
+        }
+
+        .motivation-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Celebration Animation */
+        .celebration {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+            pointer-events: none;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.5s ease;
+        }
+
+        .celebration.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .celebration-content {
+            text-align: center;
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 3rem;
+            border-radius: 20px;
+            box-shadow: var(--shadow);
+            transform: scale(0.8);
+            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .celebration.active .celebration-content {
+            transform: scale(1);
+        }
+
+        .celebration-title {
+            font-family: 'Caveat', cursive;
+            font-size: 3rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+            100% {
+                transform: scale(1);
+            }
+        }
+
+        .confetti {
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            background: var(--accent);
+            opacity: 0;
+        }
+
+        /* Daily Motivation */
+        .motivation-section {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            box-shadow: var(--shadow);
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .quote-container {
+            min-height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .quote {
+            font-family: 'Caveat', cursive;
+            font-size: 1.8rem;
+            font-weight: 500;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: var(--transition);
+        }
+
+        .quote.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .quote-author {
+            margin-top: 1rem;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .sparkle {
+            position: absolute;
+            font-size: 1.5rem;
+            opacity: 0;
+        }
+
+        /* Timeline */
+        .timeline-section {
+            margin-bottom: 3rem;
+        }
+
+        .timeline {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 4px;
+            background: var(--primary);
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            padding: 20px 40px;
+            position: relative;
+            width: 50%;
+            opacity: 0;
+            transform: translateY(30px);
+        }
+
+        .timeline-item:nth-child(odd) {
+            left: 0;
+        }
+
+        .timeline-item:nth-child(even) {
+            left: 50%;
+        }
+
+        .timeline-content {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 1.5rem;
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            right: -10px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-left: 10px solid var(--glass);
+        }
+
+        .timeline-item:nth-child(even) .timeline-content::after {
+            content: '';
+            position: absolute;
+            top: 20px;
+            left: -10px;
+            width: 0;
+            height: 0;
+            border-top: 10px solid transparent;
+            border-bottom: 10px solid transparent;
+            border-right: 10px solid var(--glass);
+        }
+
+        .timeline-date {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .timeline-milestone {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* Progress Summary */
+        .progress-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        .summary-card {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: var(--shadow);
+        }
+
+        .summary-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        .summary-label {
+            font-size: 1rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        /* Footer */
+        .footer {
+            background: var(--glass);
+            backdrop-filter: blur(10px);
+            padding: 2rem 0;
+            margin-top: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .gradient-bar {
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            animation: flow 3s infinite linear;
+        }
+
+        @keyframes flow {
+            0% {
+                background-position: 0% 50%;
+            }
+            100% {
+                background-position: 100% 50%;
+            }
+        }
+
+        .footer-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .footer-tagline {
+            font-family: 'Caveat', cursive;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .social-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .social-icon:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .social-icon::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.3s, height 0.3s;
+        }
+
+        .social-icon:hover::before {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .main-title {
+                font-size: 2.5rem;
+            }
+            
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            
+            .goals-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline::before {
+                left: 30px;
+            }
+            
+            .timeline-item {
+                width: 100%;
+                padding-left: 70px;
+                padding-right: 20px;
+            }
+            
+            .timeline-item:nth-child(even) {
+                left: 0;
+            }
+            
+            .timeline-item:nth-child(odd) .timeline-content::after,
+            .timeline-item:nth-child(even) .timeline-content::after {
+                left: -10px;
+                border-right: 10px solid var(--glass);
+                border-left: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Landing Page -->
+    <section class="landing-page" id="landing">
+        <div class="title-container">
+            <h1 class="main-title">GoalGuru</h1>
+            <p class="subtitle">Turn Dreams into Motion.</p>
+        </div>
+        <p class="subtitle typewriter">Set goals. Track growth. Celebrate success.</p>
+        <button class="get-started-btn" id="getStarted">Get Started</button>
+    </section>
+
+    <!-- Dashboard -->
+    <section class="dashboard container" id="dashboard">
+        <div class="dashboard-header">
+            <h2 class="dashboard-title">Your Goal Dashboard</h2>
+            <button class="theme-toggle" id="themeToggle">
+                <span class="toggle-icon sun-icon">🌞</span>
+                <span class="toggle-circle"></span>
+                <span class="toggle-icon moon-icon">🌙</span>
+            </button>
+        </div>
+
+        <!-- Progress Summary -->
+        <div class="progress-summary">
+            <div class="summary-card">
+                <div class="summary-value" id="goalsCompleted">0</div>
+                <div class="summary-label">Goals Completed</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value" id="totalStreaks">0</div>
+                <div class="summary-label">Total Streaks</div>
+            </div>
+            <div class="summary-card">
+                <div class="summary-value" id="currentFocus">Learn JS</div>
+                <div class="summary-label">Current Focus</div>
+            </div>
+        </div>
+
+        <!-- Goals Grid -->
+        <div class="goals-grid" id="goalsGrid">
+            <!-- Goal cards will be dynamically added here -->
+        </div>
+
+        <!-- Add Goal Button -->
+        <div class="add-goal-btn" id="addGoalBtn">
+            <div class="add-icon">+</div>
+            <div>Add New Goal</div>
+        </div>
+
+        <!-- Progress Visualization -->
+        <div class="progress-section">
+            <h3 class="section-title">Progress Visualization</h3>
+            <div class="charts-container">
+                <div class="chart-card">
+                    <div class="chart-title">Completion Rate</div>
+                    <canvas id="completionChart"></canvas>
+                </div>
+                <div class="chart-card">
+                    <div class="chart-title">Weekly Progress</div>
+                    <canvas id="weeklyChart"></canvas>
+                </div>
+            </div>
+            <div style="text-align: center; margin-top: 1.5rem;">
+                <button class="motivation-btn" id="motivationBtn">Get Motivation Boost!</button>
+            </div>
+        </div>
+
+        <!-- Daily Motivation -->
+        <div class="motivation-section">
+            <h3 class="section-title">Daily Motivation</h3>
+            <div class="quote-container">
+                <div class="quote active" id="currentQuote">
+                    "The only way to do great work is to love what you do."
+                </div>
+            </div>
+            <div class="quote-author" id="quoteAuthor">- Steve Jobs</div>
+        </div>
+
+        <!-- Timeline -->
+        <div class="timeline-section">
+            <h3 class="section-title">Goal Timeline</h3>
+            <div class="timeline" id="timeline">
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Jan 15, 2023</div>
+                        <div class="timeline-milestone">Started Learning JavaScript</div>
+                        <p>Began the journey to master front-end development</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Mar 22, 2023</div>
+                        <div class="timeline-milestone">First Project Completed</div>
+                        <p>Built a responsive portfolio website from scratch</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Jun 10, 2023</div>
+                        <div class="timeline-milestone">Mastered React Framework</div>
+                        <p>Completed advanced React course with certification</p>
+                    </div>
+                </div>
+                <div class="timeline-item">
+                    <div class="timeline-content">
+                        <div class="timeline-date">Sep 5, 2023</div>
+                        <div class="timeline-milestone">Landed First Developer Job</div>
+                        <p>Started working as a junior front-end developer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Add Goal Modal -->
+    <div class="modal" id="goalModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Add New Goal</h3>
+                <button class="close-modal" id="closeModal">&times;</button>
+            </div>
+            <form id="goalForm">
+                <div class="form-group">
+                    <label class="form-label" for="goalName">Goal Name</label>
+                    <input type="text" id="goalName" class="form-input" placeholder="What do you want to achieve?" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="goalDescription">Description</label>
+                    <textarea id="goalDescription" class="form-textarea" rows="3" placeholder="Describe your goal..."></textarea>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="goalDeadline">Deadline</label>
+                    <input type="date" id="goalDeadline" class="form-input" required>
+                </div>
+                <div class="progress-line">
+                    <div class="progress-fill" id="formProgress"></div>
+                </div>
+                <button type="submit" class="save-goal-btn">Save Goal</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Celebration Animation -->
+    <div class="celebration" id="celebration">
+        <div class="celebration-content">
+            <h2 class="celebration-title">You Did It!</h2>
+            <p>Congratulations on achieving your goal!</p>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="gradient-bar"></div>
+        <div class="container">
+            <div class="footer-content">
+                <p class="footer-tagline">Small steps, big victories — every goal counts.</p>
+                <div class="social-icons">
+                    <div class="social-icon">📘</div>
+                    <div class="social-icon">📷</div>
+                    <div class="social-icon">🐦</div>
+                    <div class="social-icon">💼</div>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Demo data
+        const demoGoals = [
+            {
+                id: 1,
+                name: "Learn JavaScript",
+                description: "Master JavaScript fundamentals and advanced concepts",
+                progress: 75,
+                streak: 7,
+                deadline: "2023-12-31"
+            },
+            {
+                id: 2,
+                name: "Exercise Regularly",
+                description: "Work out at least 4 times a week",
+                progress: 60,
+                streak: 14,
+                deadline: "2023-11-30"
+            },
+            {
+                id: 3,
+                name: "Read 12 Books",
+                description: "Read one book every month",
+                progress: 42,
+                streak: 21,
+                deadline: "2023-12-31"
+            }
+        ];
+
+        const quotes = [
+            {
+                text: "The only way to do great work is to love what you do.",
+                author: "Steve Jobs"
+            },
+            {
+                text: "The future depends on what you do today.",
+                author: "Mahatma Gandhi"
+            },
+            {
+                text: "Don't watch the clock; do what it does. Keep going.",
+                author: "Sam Levenson"
+            },
+            {
+                text: "Believe you can and you're halfway there.",
+                author: "Theodore Roosevelt"
+            },
+            {
+                text: "It always seems impossible until it's done.",
+                author: "Nelson Mandela"
+            }
+        ];
+
+        // DOM Elements
+        const landingPage = document.getElementById('landing');
+        const dashboard = document.getElementById('dashboard');
+        const getStartedBtn = document.getElementById('getStarted');
+        const goalsGrid = document.getElementById('goalsGrid');
+        const addGoalBtn = document.getElementById('addGoalBtn');
+        const goalModal = document.getElementById('goalModal');
+        const closeModal = document.getElementById('closeModal');
+        const goalForm = document.getElementById('goalForm');
+        const themeToggle = document.getElementById('themeToggle');
+        const motivationBtn = document.getElementById('motivationBtn');
+        const celebration = document.getElementById('celebration');
+        const currentQuote = document.getElementById('currentQuote');
+        const quoteAuthor = document.getElementById('quoteAuthor');
+        const goalsCompleted = document.getElementById('goalsCompleted');
+        const totalStreaks = document.getElementById('totalStreaks');
+        const currentFocus = document.getElementById('currentFocus');
+        const formProgress = document.getElementById('formProgress');
+        const goalNameInput = document.getElementById('goalName');
+        const goalDescriptionInput = document.getElementById('goalDescription');
+        const goalDeadlineInput = document.getElementById('goalDeadline');
+
+        // State
+        let goals = JSON.parse(localStorage.getItem('goals')) || demoGoals;
+        let currentQuoteIndex = 0;
+        let isDarkMode = localStorage.getItem('darkMode') === 'true';
+
+        // Initialize the app
+        function init() {
+            // Set initial theme
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+            
+            // Render goals
+            renderGoals();
+            
+            // Initialize charts
+            initCharts();
+            
+            // Start quote rotation
+            rotateQuotes();
+            
+            // Animate counters
+            animateCounters();
+            
+            // Initialize GSAP animations
+            initAnimations();
+        }
+
+        // Render goals to the grid
+        function renderGoals() {
+            goalsGrid.innerHTML = '';
+            
+            goals.forEach(goal => {
+                const goalCard = document.createElement('div');
+                goalCard.className = 'goal-card';
+                goalCard.innerHTML = `
+                    <div class="goal-header">
+                        <div>
+                            <h3 class="goal-title">${goal.name}</h3>
+                            <div class="streak-counter">
+                                <span class="fire-icon">🔥</span>
+                                <span>${goal.streak}-day streak</span>
+                            </div>
+                        </div>
+                        <div class="goal-actions">
+                            <button class="action-btn edit-btn" data-id="${goal.id}">✏️</button>
+                            <button class="action-btn delete-btn" data-id="${goal.id}">🗑️</button>
+                        </div>
+                    </div>
+                    <p class="goal-description">${goal.description}</p>
+                    <div class="progress-container">
+                        <div class="progress-ring">
+                            <canvas width="60" height="60"></canvas>
+                        </div>
+                        <div class="progress-text">${goal.progress}%</div>
+                    </div>
+                    <div class="goal-deadline">Deadline: ${formatDate(goal.deadline)}</div>
+                `;
+                
+                goalsGrid.appendChild(goalCard);
+                
+                // Draw progress ring
+                drawProgressRing(goalCard.querySelector('canvas'), goal.progress);
+            });
+            
+            // Add the "Add Goal" button at the end
+            goalsGrid.appendChild(addGoalBtn);
+        }
+
+        // Draw circular progress ring
+        function drawProgressRing(canvas, progress) {
+            const ctx = canvas.getContext('2d');
+            const centerX = canvas.width / 2;
+            const centerY = canvas.height / 2;
+            const radius = 25;
+            const lineWidth = 6;
+            
+            // Clear canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            
+            // Draw background circle
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+            ctx.strokeStyle = 'rgba(255, 255, 255, 0.2)';
+            ctx.lineWidth = lineWidth;
+            ctx.stroke();
+            
+            // Draw progress arc
+            const startAngle = -Math.PI / 2;
+            const endAngle = startAngle + (Math.PI * 2 * progress / 100);
+            
+            ctx.beginPath();
+            ctx.arc(centerX, centerY, radius, startAngle, endAngle);
+            ctx.strokeStyle = getComputedStyle(document.documentElement).getPropertyValue('--primary');
+            ctx.lineWidth = lineWidth;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+
+        // Initialize charts
+        function initCharts() {
+            // Completion Chart (Doughnut)
+            const completionCtx = document.getElementById('completionChart').getContext('2d');
+            new Chart(completionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Completed', 'In Progress', 'Not Started'],
+                    datasets: [{
+                        data: [2, 3, 1],
+                        backgroundColor: [
+                            '#2dd4bf',
+                            '#a855f7',
+                            '#f59e0b'
+                        ],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--dark'),
+                                font: {
+                                    family: 'Poppins'
+                                }
+                            }
+                        }
+                    },
+                    animation: {
+                        animateScale: true,
+                        animateRotate: true
+                    }
+                }
+            });
+            
+            // Weekly Progress Chart (Bar)
+            const weeklyCtx = document.getElementById('weeklyChart').getContext('2d');
+            new Chart(weeklyCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Progress (%)',
+                        data: [65, 70, 80, 60, 75, 90, 85],
+                        backgroundColor: '#2dd4bf',
+                        borderColor: '#2dd4bf',
+                        borderWidth: 0,
+                        borderRadius: 5
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--dark')
+                            },
+                            grid: {
+                                color: 'rgba(255, 255, 255, 0.1)'
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: getComputedStyle(document.documentElement).getPropertyValue('--dark')
+                            },
+                            grid: {
+                                display: false
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // Rotate motivational quotes
+        function rotateQuotes() {
+            setInterval(() => {
+                currentQuoteIndex = (currentQuoteIndex + 1) % quotes.length;
+                
+                // Fade out current quote
+                currentQuote.classList.remove('active');
+                
+                setTimeout(() => {
+                    currentQuote.textContent = `"${quotes[currentQuoteIndex].text}"`;
+                    quoteAuthor.textContent = `- ${quotes[currentQuoteIndex].author}`;
+                    
+                    // Fade in new quote
+                    currentQuote.classList.add('active');
+                    
+                    // Add sparkle animation
+                    createSparkle();
+                }, 500);
+            }, 5000);
+        }
+
+        // Create sparkle animation for quote change
+        function createSparkle() {
+            const sparkle = document.createElement('div');
+            sparkle.className = 'sparkle';
+            sparkle.textContent = '✨';
+            sparkle.style.left = `${Math.random() * 80 + 10}%`;
+            sparkle.style.top = `${Math.random() * 60 + 20}%`;
+            
+            document.querySelector('.motivation-section').appendChild(sparkle);
+            
+            // Animate sparkle
+            anime({
+                targets: sparkle,
+                opacity: [0, 1, 0],
+                scale: [0.5, 1.2, 0.5],
+                duration: 1500,
+                easing: 'easeOutCubic',
+                complete: function() {
+                    sparkle.remove();
+                }
+            });
+        }
+
+        // Animate counter values
+        function animateCounters() {
+            // Goals completed counter
+            animateValue(goalsCompleted, 0, 5, 1500);
+            
+            // Total streaks counter
+            animateValue(totalStreaks, 0, 42, 2000);
+            
+            // Current focus animation
+            const focusTexts = ['Learn JS', 'Exercise', 'Read Books', 'Meditate'];
+            let focusIndex = 0;
+            
+            setInterval(() => {
+                focusIndex = (focusIndex + 1) % focusTexts.length;
+                
+                // Fade out
+                anime({
+                    targets: currentFocus,
+                    opacity: 0,
+                    duration: 500,
+                    complete: function() {
+                        currentFocus.textContent = focusTexts[focusIndex];
+                        
+                        // Fade in
+                        anime({
+                            targets: currentFocus,
+                            opacity: 1,
+                            duration: 500
+                        });
+                    }
+                });
+            }, 3000);
+        }
+
+        // Helper function to animate numeric values
+        function animateValue(element, start, end, duration) {
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                element.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Initialize GSAP animations
+        function initAnimations() {
+            // Register ScrollTrigger plugin
+            gsap.registerPlugin(ScrollTrigger);
+            
+            // Landing page animations
+            gsap.timeline()
+                .from('.main-title', {
+                    duration: 1,
+                    y: 50,
+                    opacity: 0,
+                    ease: 'back.out(1.7)'
+                })
+                .from('.subtitle', {
+                    duration: 0.8,
+                    y: 30,
+                    opacity: 0,
+                    stagger: 0.2
+                }, '-=0.5')
+                .from('.get-started-btn', {
+                    duration: 0.8,
+                    scale: 0.9,
+                    opacity: 0,
+                    ease: 'elastic.out(1, 0.5)'
+                }, '-=0.3');
+            
+            // Typewriter effect for subtitle
+            const typewriterText = "Set goals. Track growth. Celebrate success.";
+            let i = 0;
+            const typewriter = document.querySelector('.typewriter');
+            
+            function typeWriter() {
+                if (i < typewriterText.length) {
+                    typewriter.textContent += typewriterText.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, 50);
+                }
+            }
+            
+            // Start typewriter after a delay
+            setTimeout(() => {
+                typewriter.textContent = '';
+                i = 0;
+                typeWriter();
+            }, 1500);
+            
+            // Goal cards animation
+            gsap.from('.goal-card', {
+                scrollTrigger: {
+                    trigger: '.goals-grid',
+                    start: 'top 80%'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.2,
+                ease: 'back.out(1.2)'
+            });
+            
+            // Add goal button animation
+            gsap.from('.add-goal-btn', {
+                scrollTrigger: {
+                    trigger: '.add-goal-btn',
+                    start: 'top 80%'
+                },
+                y: 30,
+                opacity: 0,
+                duration: 0.8,
+                ease: 'back.out(1.2)'
+            });
+            
+            // Timeline animations
+            gsap.from('.timeline-item', {
+                scrollTrigger: {
+                    trigger: '.timeline',
+                    start: 'top 70%'
+                },
+                y: 50,
+                opacity: 0,
+                duration: 0.8,
+                stagger: 0.3,
+                ease: 'power2.out'
+            });
+        }
+
+        // Format date for display
+        function formatDate(dateString) {
+            const options = { year: 'numeric', month: 'short', day: 'numeric' };
+            return new Date(dateString).toLocaleDateString(undefined, options);
+        }
+
+        // Create confetti celebration
+        function createConfetti() {
+            const colors = ['#2dd4bf', '#a855f7', '#f59e0b', '#ec4899', '#8b5cf6'];
+            
+            for (let i = 0; i < 100; i++) {
+                const confetti = document.createElement('div');
+                confetti.className = 'confetti';
+                confetti.style.left = `${Math.random() * 100}vw`;
+                confetti.style.top = `${Math.random() * 100}vh`;
+                confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+                confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+                
+                document.body.appendChild(confetti);
+                
+                // Animate confetti
+                anime({
+                    targets: confetti,
+                    translateY: [
+                        { value: -100, duration: 0 },
+                        { value: window.innerHeight + 100, duration: 2000 }
+                    ],
+                    translateX: [
+                        { value: Math.random() * 200 - 100, duration: 2000 }
+                    ],
+                    rotate: [
+                        { value: Math.random() * 360, duration: 2000 }
+                    ],
+                    opacity: [
+                        { value: 1, duration: 500 },
+                        { value: 0, duration: 500, delay: 1000 }
+                    ],
+                    easing: 'easeOutQuad',
+                    complete: function() {
+                        confetti.remove();
+                    }
+                });
+            }
+        }
+
+        // Event Listeners
+        getStartedBtn.addEventListener('click', function(e) {
+            // Create ripple effect
+            const ripple = document.createElement('span');
+            ripple.className = 'ripple';
+            const rect = e.target.getBoundingClientRect();
+            const size = Math.max(rect.width, rect.height);
+            const x = e.clientX - rect.left - size / 2;
+            const y = e.clientY - rect.top - size / 2;
+            
+            ripple.style.width = ripple.style.height = `${size}px`;
+            ripple.style.left = `${x}px`;
+            ripple.style.top = `${y}px`;
+            e.target.appendChild(ripple);
+            
+            // Remove ripple after animation
+            setTimeout(() => {
+                ripple.remove();
+            }, 600);
+            
+            // Transition to dashboard
+            setTimeout(() => {
+                landingPage.style.display = 'none';
+                dashboard.style.display = 'block';
+                
+                // Animate dashboard entrance
+                gsap.from('.dashboard-header, .progress-summary, .progress-section, .motivation-section, .timeline-section', {
+                    y: 30,
+                    opacity: 0,
+                    duration: 0.8,
+                    stagger: 0.2,
+                    ease: 'power2.out'
+                });
+            }, 500);
+        });
+
+        addGoalBtn.addEventListener('click', () => {
+            goalModal.classList.add('active');
+            
+            // Animate form elements sequentially
+            gsap.from('.form-group, .save-goal-btn', {
+                y: 20,
+                opacity: 0,
+                duration: 0.5,
+                stagger: 0.1,
+                ease: 'power2.out'
+            });
+        });
+
+        closeModal.addEventListener('click', () => {
+            goalModal.classList.remove('active');
+            goalForm.reset();
+            formProgress.style.width = '0%';
+        });
+
+        goalModal.addEventListener('click', (e) => {
+            if (e.target === goalModal) {
+                goalModal.classList.remove('active');
+                goalForm.reset();
+                formProgress.style.width = '0%';
+            }
+        });
+
+        goalForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            // Create new goal object
+            const newGoal = {
+                id: Date.now(),
+                name: goalNameInput.value,
+                description: goalDescriptionInput.value,
+                progress: 0,
+                streak: 0,
+                deadline: goalDeadlineInput.value
+            };
+            
+            // Add to goals array
+            goals.push(newGoal);
+            
+            // Save to localStorage
+            localStorage.setItem('goals', JSON.stringify(goals));
+            
+            // Re-render goals
+            renderGoals();
+            
+            // Close modal
+            goalModal.classList.remove('active');
+            
+            // Reset form
+            goalForm.reset();
+            formProgress.style.width = '0%';
+            
+            // Show success animation
+            const saveBtn = goalForm.querySelector('.save-goal-btn');
+            saveBtn.textContent = '✓ Goal Saved!';
+            
+            setTimeout(() => {
+                saveBtn.textContent = 'Save Goal';
+            }, 2000);
+            
+            // Animate new goal card
+            const newCard = goalsGrid.children[goalsGrid.children.length - 2];
+            gsap.from(newCard, {
+                scale: 0.8,
+                opacity: 0,
+                duration: 0.5,
+                ease: 'back.out(1.2)'
+            });
+        });
+
+        // Update form progress as user types
+        goalNameInput.addEventListener('input', updateFormProgress);
+        goalDescriptionInput.addEventListener('input', updateFormProgress);
+        goalDeadlineInput.addEventListener('input', updateFormProgress);
+
+        function updateFormProgress() {
+            let progress = 0;
+            
+            if (goalNameInput.value) progress += 40;
+            if (goalDescriptionInput.value) progress += 30;
+            if (goalDeadlineInput.value) progress += 30;
+            
+            formProgress.style.width = `${progress}%`;
+        }
+
+        themeToggle.addEventListener('click', () => {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+        });
+
+        motivationBtn.addEventListener('click', () => {
+            // Create confetti
+            createConfetti();
+            
+            // Play success sound (using base64 encoded short chime)
+            const audio = new Audio('data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA');
+            audio.volume = 0.3;
+            audio.play().catch(e => console.log('Audio play failed:', e));
+            
+            // Show celebration
+            celebration.classList.add('active');
+            
+            // Hide celebration after 3 seconds
+            setTimeout(() => {
+                celebration.classList.remove('active');
+            }, 3000);
+        });
+
+        // Handle goal actions (edit/delete)
+        goalsGrid.addEventListener('click', (e) => {
+            if (e.target.classList.contains('delete-btn')) {
+                const goalId = parseInt(e.target.getAttribute('data-id'));
+                goals = goals.filter(goal => goal.id !== goalId);
+                localStorage.setItem('goals', JSON.stringify(goals));
+                renderGoals();
+            }
+            
+            if (e.target.classList.contains('edit-btn')) {
+                const goalId = parseInt(e.target.getAttribute('data-id'));
+                const goal = goals.find(g => g.id === goalId);
+                
+                // Populate form with goal data
+                goalNameInput.value = goal.name;
+                goalDescriptionInput.value = goal.description;
+                goalDeadlineInput.value = goal.deadline;
+                
+                // Open modal
+                goalModal.classList.add('active');
+                
+                // Update progress
+                updateFormProgress();
+                
+                // Change form to edit mode
+                const saveBtn = goalForm.querySelector('.save-goal-btn');
+                saveBtn.textContent = 'Update Goal';
+                
+                // Handle form submission for edit
+                const submitHandler = (e) => {
+                    e.preventDefault();
+                    
+                    // Update goal
+                    goal.name = goalNameInput.value;
+                    goal.description = goalDescriptionInput.value;
+                    goal.deadline = goalDeadlineInput.value;
+                    
+                    // Save to localStorage
+                    localStorage.setItem('goals', JSON.stringify(goals));
+                    
+                    // Re-render goals
+                    renderGoals();
+                    
+                    // Close modal
+                    goalModal.classList.remove('active');
+                    
+                    // Reset form and remove event listener
+                    goalForm.reset();
+                    formProgress.style.width = '0%';
+                    goalForm.removeEventListener('submit', submitHandler);
+                    
+                    // Reset button text
+                    saveBtn.textContent = 'Save Goal';
+                };
+                
+                goalForm.addEventListener('submit', submitHandler);
+            }
+        });
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
